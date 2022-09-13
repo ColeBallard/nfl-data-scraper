@@ -6,7 +6,7 @@ Project which aims to build a dashboard that predicts scores for each NFL team w
 
 ## Design
 
-- scrape data from [footballdb.com](https://www.footballdb.com/) starting from 1970
+- scrape data from [footballdb.com](https://www.footballdb.com/) starting from 1978
 - scrape NFL player report data
 - build and load data into a SQL database
 - create machine learning models to predict future scores and stats
