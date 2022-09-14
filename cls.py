@@ -3,188 +3,188 @@ from datetime import date
 
 @dataclass
 class Team:
-    id: int
-    name: str
+    id: int = 0
+    name: str = ''
 
 @dataclass
 class Stadium:
-    id: int
-    name: str
-    elevation: int
+    id: int = 0
+    name: str = ''
+    elevation: int = 0
 
 @dataclass
 class Player:
-    id: int
-    name: str
-    height: int
+    id: int = 0
+    name: str = ''
+    height: int = 0
 
 @dataclass
 class Report:
-    id: int
-    source: str
-    description: str
-    published: date
+    id: int = 0
+    source: str = ''
+    description: str = ''
+    published: date = date
 
 @dataclass
 class TeamName:
-    id: int
-    name: str
-    team: Team
-    start_use_date: date
-    end_use_date: date
+    id: int = 0
+    name: str = ''
+    team: Team = Team
+    start_use_date: date = date
+    end_use_date: date = date
 
 @dataclass
 class TeamStadium:
-    id: int
-    team: Team
-    stadium: Stadium
-    start_use_date: date
-    end_use_date: date
+    id: int = 0
+    team: Team = Team
+    stadium: Stadium = Stadium
+    start_use_date: date = date
+    end_use_date: date = date
 
 @dataclass
 class PlayerReport:
-    id: int
-    report: Report
-    player: Player
+    id: int = 0
+    report: Report = Report
+    player: Player = Player
 
 @dataclass
 class Game:
-    id: int
-    postseason: int
-    home_teamstadium: TeamStadium
-    home_elevation_diff: int
-    away_teamstadium: TeamStadium
-    away_elevation_diff: int
-    date_played: date
-    attendance: int
+    id: int = 0
+    postseason: int = 0
+    home_teamstadium: TeamStadium = TeamStadium
+    home_elevation_diff: int = 0
+    away_teamstadium: TeamStadium = TeamStadium
+    away_elevation_diff: int = 0
+    date_played: date = date
+    attendance: int = 0
 
 @dataclass
 class Stat:
-    id: int
-    score: int
-    first_downs: int
-    rush_first_downs: int
-    pass_first_downs: int
-    pen_first_downs: int
-    total_net_yards: int
-    rush_net_yards: int
-    rush_plays: int
-    rush_avg_gain: float
-    pass_net_yards: int
-    pass_att: int
-    pass_cmp: int
-    pass_sack: int
-    pass_sack_yds_lost: int
-    pass_gross_yds: int
-    pass_avg_gain: float
-    punt_num: int
-    punt_avg: float
-    punt_block: int
-    punt_return_num: int
-    punt_return_yds: int
-    kickoff_return_num: int
-    kickoff_return_yds: int
-    int_return_num: int
-    int_return_yds: int
-    pen_num: int
-    pen_yds: int
-    fum_num: int
-    fum_lost: int
-    fg_att: int
-    fg_made: int
-    third_downs_cmp: int
-    third_downs_att: int
-    third_downs_ratio: float
-    fourth_downs_cmp: int
-    fourth_downs_att: int
-    fourth_downs_ratio: float
-    total_plays: int
-    avg_gain: float
-    time_of_poss: int
+    id: int = 0
+    score: int = 0
+    first_downs: int = 0
+    rush_first_downs: int = 0
+    pass_first_downs: int = 0
+    pen_first_downs: int = 0
+    total_net_yards: int = 0
+    rush_net_yards: int = 0
+    rush_plays: int = 0
+    rush_avg_gain: float = 0.0
+    pass_net_yards: int = 0
+    pass_att: int = 0
+    pass_cmp: int = 0
+    pass_sack: int = 0
+    pass_sack_yds_lost: int = 0
+    pass_gross_yds: int = 0
+    pass_avg_gain: float = 0.0
+    punt_num: int = 0
+    punt_avg: float = 0.0
+    punt_block: int = 0
+    punt_return_num: int = 0
+    punt_return_yds: int = 0
+    kickoff_return_num: int = 0
+    kickoff_return_yds: int = 0
+    int_return_num: int = 0
+    int_return_yds: int = 0
+    pen_num: int = 0
+    pen_yds: int = 0
+    fum_num: int = 0
+    fum_lost: int = 0
+    fg_att: int = 0
+    fg_made: int = 0
+    third_downs_cmp: int = 0
+    third_downs_att: int = 0
+    third_downs_ratio: float = 0.0
+    fourth_downs_cmp: int = 0
+    fourth_downs_att: int = 0
+    fourth_downs_ratio: float = 0.0
+    total_plays: int = 0
+    avg_gain: float = 0.0
+    time_of_poss: int = 0.0
 
 @dataclass
 class IndivStat:
-    id: int
-    pass_att: int
-    pass_cmp: int
-    pass_yds: int
-    pass_ypa: float
-    pass_td: int
-    pass_int: int
-    pass_lg: int
-    pass_sack: int
-    pass_rate: float
-    rush_att: int
-    rush_yds: int
-    rush_avg: float
-    rush_lg: int
-    rush_td: int
-    rush_fd: int
-    rec_rec: int
-    rec_yds: int
-    rec_avg: float
-    rec_lg: int
-    rec_td: int
-    rec_fd: int
-    rec_tar: int
-    rec_yac: int
-    punt_ret_num: int
-    punt_ret_yds: int
-    punt_ret_avg: float
-    punt_ret_fc: int
-    punt_ret_lg: int
-    punt_ret_td: int
-    punt_punts: int
-    punt_yds: int
-    punt_avg: float
-    punt_lg: int
-    punt_tb: int
-    punt_in20: int
-    punt_ob: int
-    punt_fc: int
-    punt_dwn: int
-    punt_blk: int
-    punt_net: float
-    kick_pat_att: int
-    kick_pat_made: int
-    kick_fg_att: int
-    kick_fg_made: int
-    kickoff_num: int
-    kickoff_yds: int
-    kickoff_avg: float
-    kickoff_lg: int
-    kickoff_tb: int
-    kickoff_ob: int
-    def_int: int
-    def_yds: int
-    def_avg: float
-    def_lg: int
-    def_td: int
-    def_solo: int
-    def_ast: int
-    def_tot: int
-    def_sack: float
-    def_yds_lost: int
-    fum_fum: int
-    fum_lost: int
-    fum_forced: int
-    fum_own: int
-    fum_opp: int
-    fum_tot: int
-    fum_yds: int
-    fum_td: int
+    id: int = 0
+    pass_att: int = 0
+    pass_cmp: int = 0
+    pass_yds: int = 0
+    pass_ypa: float = 0.0
+    pass_td: int = 0
+    pass_int: int = 0
+    pass_lg: int = 0
+    pass_sack: int = 0
+    pass_rate: float = 0.0
+    rush_att: int = 0
+    rush_yds: int = 0
+    rush_avg: float = 0.0
+    rush_lg: int = 0
+    rush_td: int = 0
+    rush_fd: int = 0
+    rec_rec: int = 0
+    rec_yds: int = 0
+    rec_avg: float = 0.0
+    rec_lg: int = 0
+    rec_td: int = 0
+    rec_fd: int = 0
+    rec_tar: int = 0
+    rec_yac: int = 0
+    punt_ret_num: int = 0
+    punt_ret_yds: int = 0
+    punt_ret_avg: float = 0.0
+    punt_ret_fc: int = 0
+    punt_ret_lg: int = 0
+    punt_ret_td: int = 0
+    punt_punts: int = 0
+    punt_yds: int = 0
+    punt_avg: float = 0.0
+    punt_lg: int = 0
+    punt_tb: int = 0
+    punt_in20: int = 0
+    punt_ob: int = 0
+    punt_fc: int = 0
+    punt_dwn: int = 0
+    punt_blk: int = 0
+    punt_net: float = 0.0
+    kick_pat_att: int = 0
+    kick_pat_made: int = 0
+    kick_fg_att: int = 0
+    kick_fg_made: int = 0
+    kickoff_num: int = 0
+    kickoff_yds: int = 0
+    kickoff_avg: float = 0.0
+    kickoff_lg: int = 0
+    kickoff_tb: int = 0
+    kickoff_ob: int = 0
+    def_int: int = 0
+    def_yds: int = 0
+    def_avg: float = 0.0
+    def_lg: int = 0
+    def_td: int = 0
+    def_solo: int = 0
+    def_ast: int = 0
+    def_tot: int = 0
+    def_sack: float = 0.0
+    def_yds_lost: int = 0
+    fum_fum: int = 0
+    fum_lost: int = 0
+    fum_forced: int = 0
+    fum_own: int = 0
+    fum_opp: int = 0
+    fum_tot: int = 0
+    fum_yds: int = 0
+    fum_td: int = 0
 
 @dataclass
 class GameTeam:
-    id: int
-    game: Game
-    team: Team
-    stat: Stat
+    id: int = 0
+    game: Game = Game
+    team: Team = Team
+    stat: Stat = Stat
 
 @dataclass
 class GamePlayer:
-    id: int
-    game: Game
-    player: Player
-    indiv_stat: IndivStat
-    weight: int
+    id: int = 0
+    game: Game = Game
+    player: Player = Player
+    indiv_stat: IndivStat = IndivStat
+    weight: int = 0
