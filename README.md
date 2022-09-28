@@ -1,4 +1,4 @@
-# nfl-predictions-dashboard
+# NFL Predictions Dashboard
 
 ## Description
  
@@ -17,6 +17,7 @@ Project which aims to build a dashboard that predicts scores for each NFL team w
 ![Split into the tables, team, stadium, player, report, and game, with connecting tables inbetween. Please use the erd.drawio file for the XML version.](https://raw.githubusercontent.com/ColeBallard/nfl-predictions-dashboard/main/res/erd.drawio.png)
 
 ## Contribution
+
 If you have an idea or want to report a bug, please create an issue.
 
 ## **[Contact](https://coleb.io/contact)**
