@@ -29,31 +29,31 @@ class Report:
 class TeamName:
     id: int = 0
     name: str = ''
-    team: Team = Team
+    teamId: int = 0
     start_use_date: date = date
     end_use_date: date = date
 
 @dataclass
 class TeamStadium:
     id: int = 0
-    team: Team = Team
-    stadium: Stadium = Stadium
+    teamId: int = 0
+    stadiumId: int = 0
     start_use_date: date = date
     end_use_date: date = date
 
 @dataclass
 class PlayerReport:
     id: int = 0
-    report: Report = Report
-    player: Player = Player
+    reportId: int = 0
+    playerId: int = 0
 
 @dataclass
 class Game:
     id: int = 0
     postseason: int = 0
-    home_teamstadium: TeamStadium = TeamStadium
+    home_teamstadiumId: int = 0
     home_elevation_diff: int = 0
-    away_teamstadium: TeamStadium = TeamStadium
+    away_teamstadiumId: int = 0
     away_elevation_diff: int = 0
     date_played: date = date
     attendance: int = 0
@@ -177,14 +177,14 @@ class IndivStat:
 @dataclass
 class GameTeam:
     id: int = 0
-    game: Game = Game
-    team: Team = Team
-    stat: Stat = Stat
+    gameId: int = 0
+    teamId: int = 0
+    statId: int = 0
 
 @dataclass
 class GamePlayer:
     id: int = 0
-    game: Game = Game
-    player: Player = Player
-    indiv_stat: IndivStat = IndivStat
+    gameId: int = 0
+    playerId: int = 0
+    indiv_statId: int = 0
     weight: int = 0
