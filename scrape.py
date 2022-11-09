@@ -107,38 +107,52 @@ def getGame(session, url, player_stats_id, export):
 
         team_stats_obj['home_score_q5'] = '0'
 
-    team_stats = res.html.find('#divBox_team', first=True).text.split('\n')
+    team_stats_sections = res.html.find('#divBox_team', first=True).find('tbody')
 
-    i = -1
+    for section in team_stats_sections:
+        
+        for row in section.find('tr'):
 
-    for stat in team_stats:
-        i += 1
+            stats = row.find('td')
 
-        if i == 0:
-            continue
+            stat_name = stats[0].text
 
-        elif i == 1:
-            away_team_abb = stat
+            stat_name = stat_name.lower().replace(' ', '_').replace('_-_', '-').replace('.', '')
 
-        elif i == 2:
-            home_team_abb = stat
+            team_stats_obj[f'away_{stat_name}'] = stats[1].text
 
-        elif stat == home_team_abb or stat == away_team_abb:
-            i -= 1
-            continue
+            team_stats_obj[f'home_{stat_name}'] = stats[2].text
 
-        elif stat in team_stat_headers:
-            stat_name = stat.lower().replace(' ', '_')
-            stat_name = stat_name.replace('_-_', '-')
-            stat_name = stat_name.replace('.', '')
+    # i = -1
 
-            i = 3
+    # for stat in team_stats:
+    #     i += 1
 
-        elif i % 3 == 1:
-            team_stats_obj[f'away_{stat_name}'] = stat
+    #     if i == 0:
+    #         continue
 
-        elif i % 3 == 2:
-            team_stats_obj[f'home_{stat_name}'] = stat
+    #     elif i == 1:
+    #         away_team_abb = stat
+
+    #     elif i == 2:
+    #         home_team_abb = stat
+
+    #     elif stat == home_team_abb or stat == away_team_abb:
+    #         i -= 1
+    #         continue
+
+    #     elif stat in team_stat_headers:
+    #         stat_name = stat.lower().replace(' ', '_')
+    #         stat_name = stat_name.replace('_-_', '-')
+    #         stat_name = stat_name.replace('.', '')
+
+    #         i = 3
+
+    #     elif i % 3 == 1:
+    #         team_stats_obj[f'away_{stat_name}'] = stat
+
+    #     elif i % 3 == 2:
+    #         team_stats_obj[f'home_{stat_name}'] = stat
 
     team_stats_obj['player_stats_id'] = player_stats_id
 
@@ -232,7 +246,7 @@ def getGame(session, url, player_stats_id, export):
 
     return [team_df, player_df]
 
-def getGames():
+def getGames(start_year, end_year):
     session = HTMLSession()
 
     player_stats_id = 0
@@ -241,12 +255,15 @@ def getGames():
 
     final_player_df = pd.DataFrame()
 
-    for year in range(1978, 2022):
+    for year in range(start_year, end_year + 1):
         res = session.get(f'https://www.footballdb.com/games/index.html?lg=NFL&yr={year}')
 
         for week in res.html.find('.statistics'):
 
             for game in week.find('tbody tr'):
+
+                if game.find('a', first=True) == None:
+                    continue
 
                 game_url = str(game.find('a', first=True).links)
                 game_url = game_url.replace("{'", '')
@@ -264,10 +281,21 @@ def getGames():
 
                 player_stats_id += 1
 
-    final_team_df.to_csv('team_stats.csv')
+    return [final_team_df, final_player_df]
 
-    final_player_df.to_csv('player_stats.csv')
 
-getGames()
+dfs_2022 = getGames(2022, 2022)
 
-# getGame(HTMLSession(), 'https://www.footballdb.com/games/boxscore/tennessee-titans-vs-miami-dolphins-2004091204', 0, True)
+dfs_2022[0].to_csv('team_stats.csv', mode='a', header=False)
+
+dfs_2022[1].to_csv('player_stats.csv', mode='a', header=False)
+
+
+# final_dfs = getGames(1978, 2021)
+
+# final_dfs[0].to_csv('team_stats.csv')
+
+# final_dfs[1].to_csv('player_stats.csv')
+
+
+# print(getGame(HTMLSession(), 'https://www.footballdb.com/games/boxscore/buffalo-bills-vs-los-angeles-rams-2022090801', 0, True))
