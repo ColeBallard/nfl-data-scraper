@@ -1,6 +1,5 @@
 from datetime import datetime
 from requests_html import HTMLSession
-from IPython.display import display
 import pandas as pd
 from cls import Team, TeamName
 
@@ -30,8 +29,6 @@ def getTeamNames(team_list):
     return team_name_list
 
 def getGame(session, url, player_stats_id, export):
-    team_stat_headers = ['First downs', 'Rushing', 'Passing', 'Penalty', 'Total Net Yards', 'Net Yards Rushing', 'Rushing Plays', 'Average Gain', 'Net Yards Passing', 'Att - Comp - Int', 'Sacked - Yds Lost', 'Gross Yards Passing', 'Avg. Yds/Att', 'Punts - Average', 'Had Blocked', 'Punt Returns', 'Kickoff Returns', 'Interception Returns', 'Penalties - Yards', 'Fumbles - Lost', 'Field Goals', 'Third Downs', 'Fourth Downs', 'Total Plays', 'Average Gain', 'Time of Possession']
-
     res = session.get(url)
 
     team_stats_obj = {}
@@ -123,40 +120,7 @@ def getGame(session, url, player_stats_id, export):
 
             team_stats_obj[f'home_{stat_name}'] = stats[2].text
 
-    # i = -1
-
-    # for stat in team_stats:
-    #     i += 1
-
-    #     if i == 0:
-    #         continue
-
-    #     elif i == 1:
-    #         away_team_abb = stat
-
-    #     elif i == 2:
-    #         home_team_abb = stat
-
-    #     elif stat == home_team_abb or stat == away_team_abb:
-    #         i -= 1
-    #         continue
-
-    #     elif stat in team_stat_headers:
-    #         stat_name = stat.lower().replace(' ', '_')
-    #         stat_name = stat_name.replace('_-_', '-')
-    #         stat_name = stat_name.replace('.', '')
-
-    #         i = 3
-
-    #     elif i % 3 == 1:
-    #         team_stats_obj[f'away_{stat_name}'] = stat
-
-    #     elif i % 3 == 2:
-    #         team_stats_obj[f'home_{stat_name}'] = stat
-
     team_stats_obj['player_stats_id'] = player_stats_id
-
-    # print(team_stats_obj)
 
     player_stats_obj = {}
 
@@ -229,15 +193,9 @@ def getGame(session, url, player_stats_id, export):
 
                     i += 1
 
-    # print(player_stats_obj)
-
     team_df = pd.DataFrame.from_dict([team_stats_obj])
 
     player_df = pd.DataFrame.from_dict(player_stats_obj, orient='index')
-
-    # display(team_df)
-
-    # display(player_df)
 
     if export:
         team_df.to_csv('team_stats.csv')
@@ -246,7 +204,7 @@ def getGame(session, url, player_stats_id, export):
 
     return [team_df, player_df]
 
-def getGames(start_year, end_year):
+def getGames(start_year, end_year, last_year_start_week, last_year_end_week):
     session = HTMLSession()
 
     player_stats_id = 0
@@ -258,44 +216,136 @@ def getGames(start_year, end_year):
     for year in range(start_year, end_year + 1):
         res = session.get(f'https://www.footballdb.com/games/index.html?lg=NFL&yr={year}')
 
-        for week in res.html.find('.statistics'):
+        if year != end_year:
 
-            for game in week.find('tbody tr'):
+            for week in res.html.find('.statistics'):
 
-                if game.find('a', first=True) == None:
-                    continue
+                for game in week.find('tbody tr'):
 
-                game_url = str(game.find('a', first=True).links)
-                game_url = game_url.replace("{'", '')
-                game_url = game_url.replace("'}", '')
+                    if game.find('a', first=True) == None:
+                        continue
 
-                url = f'https://www.footballdb.com{game_url}'
+                    game_url = str(game.find('a', first=True).links)
+                    game_url = game_url.replace("{'", '')
+                    game_url = game_url.replace("'}", '')
 
-                print(url)
+                    url = f'https://www.footballdb.com{game_url}'
 
-                game_stats = getGame(session, url, player_stats_id, False)
+                    print(url)
 
-                final_team_df = final_team_df.append(game_stats[0])
+                    game_stats = getGame(session, url, player_stats_id, False)
 
-                final_player_df = final_player_df.append(game_stats[1])
+                    final_team_df = final_team_df.append(game_stats[0])
 
-                player_stats_id += 1
+                    final_player_df = final_player_df.append(game_stats[1])
+
+                    player_stats_id += 1
+
+        else:
+
+            for week in res.html.find('.statistics')[last_year_start_week - 1:last_year_end_week]:
+
+                for game in week.find('tbody tr'):
+
+                    if game.find('a', first=True) == None:
+                        continue
+
+                    game_url = str(game.find('a', first=True).links)
+                    game_url = game_url.replace("{'", '')
+                    game_url = game_url.replace("'}", '')
+
+                    url = f'https://www.footballdb.com{game_url}'
+
+                    print(url)
+
+                    game_stats = getGame(session, url, player_stats_id, False)
+
+                    final_team_df = final_team_df.append(game_stats[0])
+
+                    final_player_df = final_player_df.append(game_stats[1])
+
+                    player_stats_id += 1
 
     return [final_team_df, final_player_df]
 
+def getLastFinishedWeek(year):
+    session = HTMLSession()
 
-dfs_2022 = getGames(2022, 2022)
+    res = session.get(f'https://www.footballdb.com/games/index.html?lg=NFL&yr={year}')
 
-dfs_2022[0].to_csv('team_stats.csv', mode='a', header=False)
+    week_count = 0
 
-dfs_2022[1].to_csv('player_stats.csv', mode='a', header=False)
+    for week in res.html.find('.statistics'):
 
+        no_game = False
 
-# final_dfs = getGames(1978, 2021)
+        for game in week.find('tbody tr'):
 
-# final_dfs[0].to_csv('team_stats.csv')
+            if game.find('a', first=True) == None:
+                no_game = True
 
-# final_dfs[1].to_csv('player_stats.csv')
+        if no_game == False:
+            week_count += 1
 
+        else:
+            break
 
-# print(getGame(HTMLSession(), 'https://www.footballdb.com/games/boxscore/buffalo-bills-vs-los-angeles-rams-2022090801', 0, True))
+    return week_count
+
+def getNFLYear():
+    current_year = int(datetime.today().strftime('%Y'))
+
+    current_month = int(datetime.today().strftime('%m'))
+
+    if current_month < 6:
+        current_year -= 1
+
+    return current_year
+
+def readScrapeInfo():
+    with open('info.txt', 'r') as f:
+        latest_scraped_year = int(f.readline().replace('latest_scraped_year = ', '').rstrip())
+
+        latest_scraped_week = int(f.readline().replace('latest_scraped_week = ', '').rstrip())
+
+        return [latest_scraped_year, latest_scraped_week]
+
+def writeScrapeInfo(current_year, last_finished_week):
+    with open('info.txt', 'w') as f:
+        f.writelines('\n'.join([f'latest_scraped_year = {current_year}', f'latest_scraped_week = {last_finished_week}']))
+
+def getMostRecentGames():
+    current_year = getNFLYear()
+
+    last_finished_week = getLastFinishedWeek(current_year)
+
+    scrapeInfo = readScrapeInfo()
+    
+    recent_dfs = getGames(scrapeInfo[0], current_year, scrapeInfo[1] + 1, last_finished_week)
+
+    writeScrapeInfo(current_year, last_finished_week)
+
+    team_df = pd.read_csv('team_stats.csv')
+
+    player_df = pd.read_csv('player_stats.csv')
+
+    team_df = team_df.append(recent_dfs[0], ignore_index = True)
+
+    player_df = player_df.append(recent_dfs[1], ignore_index = True)
+
+    team_df.to_csv('team_stats_new.csv', header=False)
+
+    player_df.to_csv('player_stats_new.csv', header=False)
+
+def getAllGames():
+    current_year = getNFLYear()
+
+    last_finished_week = getLastFinishedWeek(current_year)
+
+    final_dfs = getGames(1978, current_year, 1, last_finished_week)
+
+    final_dfs[0].to_csv('team_stats.csv')
+
+    final_dfs[1].to_csv('player_stats.csv')
+
+    writeScrapeInfo(current_year, last_finished_week)
