@@ -1,7 +1,6 @@
 from datetime import datetime
 from requests_html import HTMLSession
 import pandas as pd
-from cls import Team, TeamName
 
 def getGame(session, url, player_stats_id, export):
     res = session.get(url)
