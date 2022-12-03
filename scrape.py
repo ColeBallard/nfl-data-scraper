@@ -3,31 +3,6 @@ from requests_html import HTMLSession
 import pandas as pd
 from cls import Team, TeamName
 
-def getTeams():
-    team_list = []
-
-    data = pd.read_csv('https://raw.githubusercontent.com/ColeBallard/historical-nfl-team-names/main/historical-nfl-team-names.csv')
-
-    i = 0
-
-    for team in data['CurrentTeam'].unique():
-        team_list.append(Team(id=i, name=team))
-
-        i += 1
-
-    return team_list
-
-def getTeamNames(team_list):
-    team_name_list = []
-
-    data = pd.read_csv('https://raw.githubusercontent.com/ColeBallard/historical-nfl-team-names/main/historical-nfl-team-names.csv')
-
-
-    for i, row in data.iterrows():
-        team_name_list.append(TeamName(id=i, name=row['Team'], teamId=list(filter(lambda x: x.name == row['CurrentTeam'], team_list))[0].id, start_use_date=row['YearStart'], end_use_date=row['YearEnd']))
-
-    return team_name_list
-
 def getGame(session, url, player_stats_id, export):
     res = session.get(url)
 
