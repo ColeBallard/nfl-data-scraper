@@ -1,10 +1,31 @@
+from datetime import datetime
 import pandas as pd
 import math
 
-def createSplitTeamStats(df, export_file):
+def getCurrentTeams():
+    team_list = []
+
+    data = pd.read_csv('https://raw.githubusercontent.com/ColeBallard/historical-nfl-team-names/main/historical-nfl-team-names.csv')
+
+    for team in data['CurrentTeam'].unique():
+        team_list.append(team)
+
+    return team_list
+
+def getHistoricalTeams():
+    team_list = []
+
+    data = pd.read_csv('https://raw.githubusercontent.com/ColeBallard/historical-nfl-team-names/main/historical-nfl-team-names.csv')
+
+    for team in data['Team']:
+        team_list.append(team)
+
+    return team_list
+
+def splitTeamStats(df, export_file):
     df = df.reset_index()
 
-    split_df = pd.DataFrame()
+    split_objs = []
 
     df_cols = df.columns.tolist()
 
@@ -54,8 +75,13 @@ def createSplitTeamStats(df, export_file):
         away_team_obj['game_index'] = away_team_obj.pop('index')
         home_team_obj['game_index'] = home_team_obj.pop('index')
 
-        split_df = split_df.append(away_team_obj, ignore_index=True)
-        split_df = split_df.append(home_team_obj, ignore_index=True)
+        split_objs.append(away_team_obj)
+        split_objs.append(home_team_obj)
+
+    split_df = pd.DataFrame.from_dict(split_objs)
+
+    # delete unnamed and pointless columns
+    split_df = split_df.drop(split_df.columns[[2, 3, 4]],axis = 1)
 
     split_df.to_csv(export_file)
 
@@ -173,10 +199,75 @@ def expandTeamStats(df, export_file):
 
     df.to_csv(export_file)
 
+def seperateTeamStats(df):
+    seperate_teams = {}
+
+    for team in getHistoricalTeams():
+        seperate_teams[team] = {}
+
+    for index, row in df.iterrows():
+        month = datetime.strptime(row['date'], '%B %d, %Y').month
+
+        year = datetime.strptime(row['date'], '%B %d, %Y').year
+
+        if month >= 1 and month <= 6:
+            year -= 1
+
+        if year not in seperate_teams[row['team']].keys():
+            seperate_teams[row['team']][year] = [row]
+
+        else:
+            seperate_teams[row['team']][year].append(row)
+
+    return seperate_teams
+
+def staggerTeamStats(df, export_file):
+    df = df.reset_index()
+
+    seperate_teams = seperateTeamStats(df)
+
+    seperate_teams_list = []
+
+    pd.DataFrame(seperate_teams['Indianapolis Colts'][2008]).to_csv('before_test.csv')
+
+    for team in seperate_teams:
+
+        for year in seperate_teams[team]:
+
+            for index, game in enumerate(seperate_teams[team][year]):
+
+                # -1 to account for 0 index, and -1 to account for no outcome associated with final game stats
+                if index <= (len(seperate_teams[team][year]) - 2):
+                    game['outcome'] = seperate_teams[team][year][index + 1]['outcome']
+                    game['home_or_away'] = seperate_teams[team][year][index + 1]['home_or_away']
+                    game['postseason'] = seperate_teams[team][year][index + 1]['postseason']
+                    game['team'] = seperate_teams[team][year][index + 1]['team']
+                    game['opponent'] = seperate_teams[team][year][index + 1]['opponent']
+                    game['date'] = seperate_teams[team][year][index + 1]['date']
+                    game['stadium'] = seperate_teams[team][year][index + 1]['stadium']
+
+                    seperate_teams_list.append(game)
+
+    seperate_df = pd.DataFrame(seperate_teams_list)
+
+    for index, col in enumerate(seperate_df.columns.values):
+        if index >= 9:
+            seperate_df.rename(columns={seperate_df.columns[index]: f'prev_{col}'},inplace=True)
+            # seperate_df.columns.values[index] = f'prev_{col}'
+
+    seperate_df = seperate_df.drop(seperate_df.columns[1], axis=1)
+
+    seperate_df.to_csv(export_file)
+
+
 # team_df = pd.read_csv('team_stats.csv')
 
 # expandTeamStats(team_df, 'expanded_team_stats.csv')
 
-expanded_df = pd.read_csv('expanded_team_stats.csv')
+# expanded_df = pd.read_csv('expanded_team_stats.csv')
 
-createSplitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
+# splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
+
+expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
+
+staggerTeamStats(expanded_split_df, 'staggered_team_stats.csv')
