@@ -288,6 +288,8 @@ def writeScrapeInfo(current_year, last_finished_week):
     with open('info.txt', 'w') as f:
         f.writelines('\n'.join([f'latest_scraped_year = {current_year}', f'latest_scraped_week = {last_finished_week}']))
 
+#############################################################################
+
 def getMostRecentGames():
     current_year = getNFLYear()
 
