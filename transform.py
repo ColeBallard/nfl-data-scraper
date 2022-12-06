@@ -112,6 +112,38 @@ def getWinPct(index, team, year, seperate_team_stats):
 
     return wins / index
 
+def getWinStreak(index, team, year, seperate_team_stats):
+    streak = 0
+
+    if index == 0:
+        return 0
+
+    for game in seperate_team_stats[team][year][0:index]:
+        if streak >= 1:
+            if game['outcome'] == 1:
+                streak += 1
+
+            elif game['outcome'] == 0:
+                streak = -1
+
+        elif streak <= -1:
+            if game['outcome'] == 1:
+                streak = 1
+
+            elif game['outcome'] == 0:
+                streak -= 1
+
+        else:
+            if game['outcome'] == 1:
+                streak = 1
+
+            elif game['outcome'] == 0:
+                streak = -1
+        
+    # ties don't affect streak
+
+    return streak
+
 def unknownToNull(x):
     if x == 'unknown':
         return None
@@ -269,6 +301,9 @@ def staggerTeamStats(df, export_file):
                     game['team_win_pct'] = getWinPct(index, team, year, seperate_teams)
                     game['opp_win_pct'] = getWinPct(index, game['opponent'], year, seperate_teams)
 
+                    game['team_win_streak'] = getWinStreak(index, team, year, seperate_teams)
+                    game['opp_win_streak'] = getWinStreak(index, game['opponent'], year, seperate_teams)
+
                     seperate_teams_list.append(game)
 
     seperate_df = pd.DataFrame(seperate_teams_list)
@@ -300,9 +335,9 @@ def transformTeamStats():
 
 # expandTeamStats(team_df, 'expanded_team_stats.csv')
 
-expanded_df = pd.read_csv('expanded_team_stats.csv')
+# expanded_df = pd.read_csv('expanded_team_stats.csv')
 
-splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
+# splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
 
 expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
 
