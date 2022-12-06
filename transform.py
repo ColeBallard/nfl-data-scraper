@@ -2,25 +2,15 @@ from datetime import datetime
 import pandas as pd
 import math
 
-def getCurrentTeams():
-    team_list = []
+def getTeams():
+    team_names = {}
 
-    data = pd.read_csv('https://raw.githubusercontent.com/ColeBallard/historical-nfl-team-names/main/historical-nfl-team-names.csv')
+    team_names_df = pd.read_csv('https://raw.githubusercontent.com/ColeBallard/historical-nfl-team-names/main/historical-nfl-team-names.csv')
 
-    for team in data['CurrentTeam'].unique():
-        team_list.append(team)
+    for index, team in team_names_df.iterrows():
+        team_names[team['Team']] = team['CurrentTeam']
 
-    return team_list
-
-def getHistoricalTeams():
-    team_list = []
-
-    data = pd.read_csv('https://raw.githubusercontent.com/ColeBallard/historical-nfl-team-names/main/historical-nfl-team-names.csv')
-
-    for team in data['Team']:
-        team_list.append(team)
-
-    return team_list
+    return team_names
 
 def makeOneDash(dash_stat):
     return dash_stat.replace('--', '-')
@@ -82,7 +72,7 @@ def colPercentToDecimal(df):
 def seperateTeamStats(df):
     seperate_teams = {}
 
-    for team in getHistoricalTeams():
+    for team in getTeams():
         seperate_teams[team] = {}
 
     for index, row in df.iterrows():
@@ -323,6 +313,8 @@ def staggerTeamStats(df, export_file):
     cols_list.pop(cols_list.index('prev_game_index'))
 
     seperate_df = seperate_df[cols_list + ['prev_player_stats_id'] + ['prev_game_index']]
+
+
 
     seperate_df.to_csv(export_file)
 
