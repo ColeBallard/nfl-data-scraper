@@ -314,6 +314,16 @@ def staggerTeamStats(df, export_file):
 
     seperate_df = seperate_df.drop(seperate_df.columns[1], axis=1)
 
+    # move player stats id and game index columns to end
+
+    cols_list = list(seperate_df.columns.values)
+
+    cols_list.pop(cols_list.index('prev_player_stats_id'))
+
+    cols_list.pop(cols_list.index('prev_game_index'))
+
+    seperate_df = seperate_df[cols_list + ['prev_player_stats_id'] + ['prev_game_index']]
+
     seperate_df.to_csv(export_file)
 
 #############################################################################
