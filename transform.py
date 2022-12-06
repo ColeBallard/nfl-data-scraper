@@ -265,7 +265,7 @@ def splitTeamStats(df, export_file):
 
     split_df.to_csv(export_file)
 
-def staggerTeamStats(df, export_file):
+def staggerTeamStats(df, team_dict, export_file):
     df = df.reset_index()
 
     seperate_teams = seperateTeamStats(df)
@@ -283,10 +283,12 @@ def staggerTeamStats(df, export_file):
                     game['outcome'] = seperate_teams[team][year][index + 1]['outcome']
                     game['home_or_away'] = seperate_teams[team][year][index + 1]['home_or_away']
                     game['postseason'] = seperate_teams[team][year][index + 1]['postseason']
-                    game['team'] = seperate_teams[team][year][index + 1]['team']
                     game['opponent'] = seperate_teams[team][year][index + 1]['opponent']
                     game['date'] = seperate_teams[team][year][index + 1]['date']
                     game['stadium'] = seperate_teams[team][year][index + 1]['stadium']
+
+                    game['current_team'] = team_dict[game['team']]
+                    game['opp_current_team'] = team_dict[game['opponent']]
 
                     game['team_win_pct'] = getWinPct(index, team, year, seperate_teams)
                     game['opp_win_pct'] = getWinPct(index, game['opponent'], year, seperate_teams)
@@ -313,8 +315,6 @@ def staggerTeamStats(df, export_file):
     cols_list.pop(cols_list.index('prev_game_index'))
 
     seperate_df = seperate_df[cols_list + ['prev_player_stats_id'] + ['prev_game_index']]
-
-
 
     seperate_df.to_csv(export_file)
 
@@ -343,4 +343,4 @@ def transformTeamStats():
 
 expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
 
-staggerTeamStats(expanded_split_df, 'staggered_team_stats.csv')
+staggerTeamStats(expanded_split_df, getTeams(), 'staggered_team_stats.csv')
