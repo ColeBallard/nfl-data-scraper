@@ -23,7 +23,7 @@ Here are the steps to replicate the scrape.
 1. Clone the repository.
 
 ```shell
-git clone https://github.com/ColeBallard/cybersecurity-jobs-analysis
+git clone https://github.com/ColeBallard/nfl-predictions-dashboard
 ```
 
 2. Install the latest version of python. [Downloads.](https://www.python.org/downloads/)
