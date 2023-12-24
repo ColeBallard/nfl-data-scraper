@@ -328,7 +328,7 @@ def getAllGames():
 
 #############################################################################
     
-def show_menu():
+def showMenu():
     print("\nMenu:")
     print("1. Get All Games")
     print("2. Get Most Recent Games")
@@ -338,7 +338,7 @@ def show_menu():
 
 def main():
     while True:
-        user_choice = show_menu()
+        user_choice = showMenu()
 
         if user_choice == '1':
             getAllGames()
