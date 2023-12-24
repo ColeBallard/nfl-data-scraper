@@ -325,3 +325,30 @@ def getAllGames():
     final_dfs[1].to_csv('player_stats.csv')
 
     writeScrapeInfo(current_year, last_finished_week)
+
+#############################################################################
+    
+def show_menu():
+    print("\nMenu:")
+    print("1. Get All Games")
+    print("2. Get Most Recent Games")
+    print("3. Exit")
+    choice = input("Enter your choice (1/2/3): ")
+    return choice
+
+def main():
+    while True:
+        user_choice = show_menu()
+
+        if user_choice == '1':
+            getAllGames()
+        elif user_choice == '2':
+            getMostRecentGames()
+        elif user_choice == '3':
+            print("Exiting the application.")
+            break
+        else:
+            print("Invalid choice. Please try again.")
+
+if __name__ == "__main__":
+    main()
