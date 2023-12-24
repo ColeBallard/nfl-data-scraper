@@ -18,7 +18,7 @@ Project which aims to build a dashboard that predicts scores for each NFL team w
 
 ## Scrape
 
-Here are the steps to replicate the scrape.
+Here are the steps to scrape the necessary data:
 
 1. Clone the repository.
 
@@ -28,19 +28,22 @@ git clone https://github.com/ColeBallard/nfl-predictions-dashboard
 
 2. Install the latest version of python. [Downloads.](https://www.python.org/downloads/)
 
-3. Install dependencies (depends on your version of pip).
+3. Install dependencies.
 
 ```shell
-pip install pandas
-pip install requests-html
-pip install dataclasses
+pip install -r requirements.txt
 ```
 
-4. Run the getAllGames() function in the scrape.py file.
+4. Run `scrape.py`.
 
 ```shell
-python -c "from scrape import *;getAllGames()"
+python scrape.py
 ```
+
+5. In the command line, type in the number that corresponds to the scraping option you want to run.
+
+- For your first time scraping, run **Get All Games**.
+- If you want to update your data on the most recent NFL games, run **Get Most Recent Games**.
 
 ## Contribution
 
