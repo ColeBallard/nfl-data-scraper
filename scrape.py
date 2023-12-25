@@ -31,8 +31,8 @@ def getGame(session, url, player_stats_id, export):
 
     team_names = game_info[0 + playoff_add]
 
-    team_stats_obj['away_team'] = team_names[:team_names.index(' at ')]
-    team_stats_obj['home_team'] = team_names[(team_names.index(' at ') + 4):]
+    team_stats_obj['away_team'] = team_names[:team_names.index(' vs ')]
+    team_stats_obj['home_team'] = team_names[(team_names.index(' vs ') + 4):]
 
     team_stats_obj['date'] = game_info[1 + playoff_add]
     team_stats_obj['stadium'] = game_info[2 + playoff_add]
@@ -171,6 +171,8 @@ def getGame(session, url, player_stats_id, export):
 
     player_df = pd.DataFrame.from_dict(player_stats_obj, orient='index')
 
+    print(team_df)
+
     if export:
         team_df.to_csv('team_stats.csv')
 
@@ -209,9 +211,9 @@ def getGames(start_year, end_year, last_year_start_week, last_year_end_week):
 
                     game_stats = getGame(session, url, player_stats_id, False)
 
-                    final_team_df = final_team_df.append(game_stats[0])
+                    final_team_df = pd.concat([final_team_df, game_stats[0]])
 
-                    final_player_df = final_player_df.append(game_stats[1])
+                    final_player_df = pd.concat([final_player_df, game_stats[1]])
 
                     player_stats_id += 1
 
@@ -234,9 +236,9 @@ def getGames(start_year, end_year, last_year_start_week, last_year_end_week):
 
                     game_stats = getGame(session, url, player_stats_id, False)
 
-                    final_team_df = final_team_df.append(game_stats[0])
+                    final_team_df = pd.concat([final_team_df, game_stats[0]])
 
-                    final_player_df = final_player_df.append(game_stats[1])
+                    final_player_df = pd.concat([final_player_df, game_stats[1]])
 
                     player_stats_id += 1
 
@@ -305,9 +307,9 @@ def getMostRecentGames():
 
     player_df = pd.read_csv('player_stats.csv')
 
-    team_df = team_df.append(recent_dfs[0], ignore_index = True)
+    team_df = pd.concat([team_df, recent_dfs[0]], ignore_index = True)
 
-    player_df = player_df.append(recent_dfs[1], ignore_index = True)
+    player_df = pd.concat([player_df, recent_dfs[1]], ignore_index = True)
 
     team_df.to_csv('team_stats_new.csv', header=False)
 
