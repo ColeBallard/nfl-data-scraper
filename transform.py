@@ -320,27 +320,48 @@ def staggerTeamStats(df, team_dict, export_file):
 
 #############################################################################
 
-def transformTeamStats():
-    team_df = pd.read_csv('team_stats.csv')
+def showMenu():
+    print("\nMenu:")
+    print("1. Perform All Transformations")
+    print("2. Split Team Stats")
+    print("3. Stagger Team Stats")
+    print("4. Expand Team Stats")
+    print("5. Exit")
+    choice = input("Enter your choice (1/2/3/4/5): ")
+    return choice
 
-    expandTeamStats(team_df, 'expanded_team_stats.csv')
+def main():
+    while True:
+        user_choice = showMenu()
 
-    expanded_df = pd.read_csv('expanded_team_stats.csv')
+        if user_choice == '1':
+            team_df = pd.read_csv('team_stats.csv')
+            expandTeamStats(team_df, 'expanded_team_stats.csv')
 
-    splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
+            expanded_df = pd.read_csv('expanded_team_stats.csv')
+            splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
 
-    expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
+            expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
+            staggerTeamStats(expanded_split_df, getTeams(), 'staggered_team_stats.csv')
 
-    staggerTeamStats(expanded_split_df, 'staggered_team_stats.csv')
+        elif user_choice == '2':
+            team_df = pd.read_csv('team_stats.csv')
+            expandTeamStats(team_df, 'expanded_team_stats.csv')
 
-# team_df = pd.read_csv('team_stats.csv')
+        elif user_choice == '3':
+            expanded_df = pd.read_csv('expanded_team_stats.csv')
+            splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
 
-# expandTeamStats(team_df, 'expanded_team_stats.csv')
+        elif user_choice == '4':
+            splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
+            expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
 
-# expanded_df = pd.read_csv('expanded_team_stats.csv')
+        elif user_choice == '5':
+            print("Exiting the application.")
+            break
 
-# splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
+        else:
+            print("Invalid choice. Please try again.")
 
-expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
-
-staggerTeamStats(expanded_split_df, getTeams(), 'staggered_team_stats.csv')
+if __name__ == "__main__":
+    main()
