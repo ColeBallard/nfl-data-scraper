@@ -171,8 +171,6 @@ def getGame(session, url, player_stats_id, export):
 
     player_df = pd.DataFrame.from_dict(player_stats_obj, orient='index')
 
-    print(team_df)
-
     if export:
         team_df.to_csv('team_stats.csv')
 
