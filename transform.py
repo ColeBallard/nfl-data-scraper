@@ -318,15 +318,28 @@ def staggerTeamStats(df, team_dict, export_file):
 
     seperate_df.to_csv(export_file)
 
+def preprocessTeamStats(df, export_file):
+    df = df.reset_index()
+
+    # Drop the first column
+    df = df.iloc[:, 1:]
+
+    df = df.drop(['index', 'team', 'opponent', 'stadium', 'current_team', 'opp_current_team', 'prev_player_stats_id', 'prev_game_index'], axis=1)
+
+    
+
+    df.to_csv(export_file)
+
 #############################################################################
 
 def showMenu():
     print("\nMenu:")
     print("1. Perform All Transformations")
-    print("2. Split Team Stats")
-    print("3. Stagger Team Stats")
-    print("4. Expand Team Stats")
-    print("5. Exit")
+    print("2. Expand Team Stats")
+    print("3. Split Team Stats")
+    print("4. Stagger Team Stats")
+    print("5. Preprocess Team Stats")
+    print("6. Exit")
     choice = input("Enter your choice (1/2/3/4/5): ")
     return choice
 
@@ -344,6 +357,9 @@ def main():
             expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
             staggerTeamStats(expanded_split_df, getTeams(), 'staggered_team_stats.csv')
 
+            staggered_df = pd.read_csv('staggered_team_stats.csv')
+            preprocessTeamStats(staggered_df, 'preprocessed_team_stats.csv')
+
         elif user_choice == '2':
             team_df = pd.read_csv('team_stats.csv')
             expandTeamStats(team_df, 'expanded_team_stats.csv')
@@ -353,10 +369,14 @@ def main():
             splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
 
         elif user_choice == '4':
-            splitTeamStats(expanded_df, 'expanded_split_team_stats.csv')
             expanded_split_df = pd.read_csv('expanded_split_team_stats.csv')
+            staggerTeamStats(expanded_split_df, getTeams(), 'staggered_team_stats.csv')
 
         elif user_choice == '5':
+            staggered_df = pd.read_csv('staggered_team_stats.csv')
+            preprocessTeamStats(staggered_df, 'preprocessed_team_stats.csv')
+
+        elif user_choice == '6':
             print("Exiting the application.")
             break
 
