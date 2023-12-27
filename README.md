@@ -1,16 +1,13 @@
-# NFL Predictions Dashboard
+# NFL Historical Data
 
 ## Description
  
-Project which aims to build a dashboard that predicts scores for each NFL team weekly, as well as team and individual player statistics.
+Historical NFL Data that captures basic stats and provides several formats for usage.
 
 ## Design
 
 - scrape data from [footballdb.com](https://www.footballdb.com/) starting from 1978
 - scrape NFL player report data
-- build and load data into a SQL database
-- create machine learning models to predict future scores and stats
-- display weekly predictions in a dashboard
 
 ## Entity Relationship Diagram
 

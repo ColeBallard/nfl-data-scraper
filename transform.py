@@ -321,12 +321,15 @@ def staggerTeamStats(df, team_dict, export_file):
 def preprocessTeamStats(df, export_file):
     df = df.reset_index()
 
-    # Drop the first column
-    df = df.iloc[:, 1:]
+    df['date'] = pd.to_datetime(df['date'])
 
-    df = df.drop(['index', 'team', 'opponent', 'stadium', 'current_team', 'opp_current_team', 'prev_player_stats_id', 'prev_game_index'], axis=1)
+    ref_date = pd.to_datetime('1978-01-01')
 
-    
+    df['recency'] = (df['date'] - ref_date).dt.days
+
+    df['prev_overtime'] = df['prev_overtime'].astype(int)
+
+    df = df.drop(['team', 'opponent', 'date', 'stadium', 'current_team', 'opp_current_team', 'prev_player_stats_id', 'prev_game_index'], axis=1)
 
     df.to_csv(export_file)
 
