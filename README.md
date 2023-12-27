@@ -2,58 +2,38 @@
 
 ## Description
  
-Python tool to scrape historical NFL data that captures basic stats and provides several formats for usage.
+Basic tool for scraping historical NFL data and transforming the data into several formats for a variety of uses.
 
 ## Design
 
-- scrape data from [footballdb.com](https://www.footballdb.com/) starting from 1978
-- scrape NFL player report data
+- scrape NFL game and player data from [footballdb.com](https://www.footballdb.com/) starting from 1978
 - transform into various formats
   - Expanded Team Stats
   - Split Team Stats
   - Staggered Team Stats
   - Preprocessed Team Stats
 
-## Entity Relationship Diagram
-
-![Split into the tables, team, stadium, player, report, and game, with connecting tables inbetween. Please use the erd.drawio file for the XML version.](https://raw.githubusercontent.com/ColeBallard/nfl-predictions-dashboard/main/res/erd.drawio.png)
-
 ## Usage
 
-Here are the steps to scrape the necessary data:
+To install and use this app:
 
-1. Clone the repository.
+1. Navigate to the [Releases page](https://github.com/ColeBallard/nfl-data-scraper/releases) of this repository.
 
-```shell
-git clone https://github.com/ColeBallard/nfl-predictions-dashboard
-```
+2. Under the latest release, find the section **Assets**.
 
-2. Install the latest version of python. [Downloads.](https://www.python.org/downloads/)
+3. Click on the **nfl-data-scraper.zip** file to download it to your computer.
 
-3. Install dependencies.
+4. Extract the contents of **nfl-data-scraper.zip** by right-clicking on the file and selecting **Extract All...**.
 
-```shell
-pip install -r requirements.txt
-```
+5. Open the extracted folder and run **app.exe**.
 
-4. Run `scrape.py`.
-
-```shell
-python scrape.py
-```
-
-5. In the command line, type in the **number** that corresponds to the scraping option you want to run.
+6. Click the button that corresponds to the scraping option you want to run.
 
 - For your first time scraping, run **Get All Games**.
+  - Note: This will take **over an hour**.
 - If you want to update your data on the most recent NFL games, run **Get Most Recent Games**.
 
-6. Run `transform.py`.
-
-```shell
-python transform.py
-```
-
-7. In the command line, type in the **number** that corresponds to the transforming option you want to run.
+7. Click the button that corresponds to the transforming option you want to run.
 
 - For your first time transforming, run **Perform All Transformations**.
 - For running individual transformation steps, select one of the other options.
